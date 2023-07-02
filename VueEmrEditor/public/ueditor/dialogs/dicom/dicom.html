@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<!-- saved from url=(0080)https://rawgit.com/cornerstonejs/cornerstone/master/example/jsminimal/index.html -->
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- twitter bootstrap CSS stylesheet - not required by cornerstone -->
+    <link href="./index_files/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../internal.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+
+
+        <button id="x256" class="btn">256x256</button>
+        <button id="x512" class="btn">512x512</button>
+        <button id="invert" class="btn">颜色翻转</button>
+        <button id="interpolation" class="btn">切换插值</button>
+        <button id="hflip" class="btn">水平翻转</button>
+        <button id="vflip" class="btn">垂直翻转</button>
+        <button id="rotate" class="btn">旋转90度</button>
+        <button onclick="clicks()">点击</button>
+        <img src='data:image/png;base64,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
+' />
+        <br>
+        <br>
+
+        <div id="dicomImageWrapper" style="width:512px;height:512px;position:relative;color:white"
+            oncontextmenu="return false" onmousedown="return false">
+
+            <div id="dicomImage" style="width:512px;height:512px;top:0px;left:0px;position:absolute">
+                <canvas id='dicomcav' class="cornerstone-canvas" width="512"
+                    style="display: block; width: 512px; height: 512px;" height="512"></canvas>
+            </div>
+            <div id="topleft" class="overlay" style="position:absolute;top:0px;left:0px">
+                Patient Name
+            </div>
+            <div id="topright" class="overlay" style="position:absolute;top:0px;right:0px">Render Time:7 ms</div>
+            <div id="bottomright" class="overlay" style="position:absolute;bottom:0px;right:0px">Zoom:2.00</div>
+            <div id="bottomleft" class="overlay" style="position:absolute;bottom:0px;left:0px">WW/WL:256/127</div>
+        </div>
+
+        <div><span id="coords">pageX=526, pageY=432, pixelX=255.5, pixelY=62.5</span></div>
+
+    </div>
+
+
+    <!-- include the cornerstone library -->
+    <script src="./index_files/cornerstone.js"></script>
+    <script>window.cornerstone || document.write('<script src="https://unpkg.com/cornerstone-core">\x3C/script>')</script>
+    <script src="./index_files/cornerstone-core"></script>
+
+    <!-- include special code for these examples which provides images -->
+    <script src="./index_files/exampleImageIdLoader.js"></script>
+    <script>
+        const imageIds = [
+            'example://1',
+            'example://2'
+        ];
+
+        let currentImageIndex = 0;
+
+        // updates the image display
+        function updateTheImage(imageIndex) {
+            return cornerstone.loadAndCacheImage(imageIds[imageIndex]).then(function (image) {
+                currentImageIndex = imageIndex;
+                const viewport = cornerstone.getViewport(element);
+                cornerstone.displayImage(element, image, viewport);
+
+            });
+        }
+
+        // image enable the element
+        const element = document.getElementById('dicomImage');
+        cornerstone.enable(element);
+
+        // setup handlers before we display the image
+        function onImageRendered(e) {
+            const eventData = e.detail;
+            // set the canvas context to the image coordinate system
+            cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
+
+            // NOTE: The coordinate system of the canvas is in image pixel space.  Drawing
+            // to location 0,0 will be the top left of the image and rows,columns is the bottom
+            // right.
+            const context = eventData.canvasContext;
+            context.beginPath();
+            context.strokeStyle = 'white';
+            context.lineWidth = .5;
+            context.rect(128, 90, 50, 60);
+            context.stroke();
+            context.fillStyle = "white";
+            context.font = "6px Arial";
+            context.fillText("Tumor Here", 128, 85);
+
+            document.getElementById('topright').textContent = "Render Time:" + eventData.renderTimeInMs + " ms";
+            document.getElementById('bottomleft').textContent = "WW/WL:" + Math.round(eventData.viewport.voi.windowWidth) + "/" + Math.round(eventData.viewport.voi.windowCenter);
+            document.getElementById('bottomright').textContent = "Zoom:" + eventData.viewport.scale.toFixed(2);
+
+        }
+        element.addEventListener('cornerstoneimagerendered', onImageRendered);
+
+        // load and display the image
+        const imagePromise = updateTheImage(0);
+
+        // add handlers for mouse events once the image is loaded.
+        imagePromise.then(function () {
+
+            // add event handlers to pan image on mouse move
+            element.addEventListener('mousedown', function (e) {
+                let lastX = e.pageX;
+                let lastY = e.pageY;
+                const mouseButton = e.which;
+
+                function mouseMoveHandler(e) {
+                    const deltaX = e.pageX - lastX;
+                    const deltaY = e.pageY - lastY;
+                    lastX = e.pageX;
+                    lastY = e.pageY;
+
+                    if (mouseButton === 1) {
+                        let viewport = cornerstone.getViewport(element);
+                        viewport.voi.windowWidth += (deltaX / viewport.scale);
+                        viewport.voi.windowCenter += (deltaY / viewport.scale);
+                        cornerstone.setViewport(element, viewport);
+                    } else if (mouseButton === 2) {
+                        let viewport = cornerstone.getViewport(element);
+                        viewport.translation.x += (deltaX / viewport.scale);
+                        viewport.translation.y += (deltaY / viewport.scale);
+                        cornerstone.setViewport(element, viewport);
+                    } else if (mouseButton === 3) {
+                        let viewport = cornerstone.getViewport(element);
+                        viewport.scale += (deltaY / 100);
+                        cornerstone.setViewport(element, viewport);
+                    }
+                }
+
+                function mouseUpHandler() {
+                    document.removeEventListener('mouseup', mouseUpHandler);
+                    document.removeEventListener('mousemove', mouseMoveHandler);
+                }
+
+                document.addEventListener('mousemove', mouseMoveHandler);
+                document.addEventListener('mouseup', mouseUpHandler);
+            });
+
+            const mouseWheelEvents = ['mousewheel', 'DOMMouseScroll'];
+            mouseWheelEvents.forEach(function (eventType) {
+                element.addEventListener(eventType, function (e) {
+                    // Firefox e.detail > 0 scroll back, < 0 scroll forward
+                    // chrome/safari e.wheelDelta < 0 scroll back, > 0 scroll forward
+                    if (e.wheelDelta < 0 || e.detail > 0) {
+                        if (currentImageIndex === 0) {
+                            updateTheImage(1);
+                        }
+                    } else {
+                        if (currentImageIndex === 1) {
+                            updateTheImage(0);
+                        }
+                    }
+
+                    // Prevent page from scrolling
+                    return false;
+                });
+            });
+
+            // Add event handler to the ww/wc apply button
+            document.getElementById('x256').addEventListener('click', function (e) {
+                element.style.width = '256px';
+                element.style.height = '256px';
+                cornerstone.resize(element);
+            });
+
+            document.getElementById('x512').addEventListener('click', function (e) {
+                element.style.width = '512px';
+                element.style.height = '512px';
+                cornerstone.resize(element);
+            });
+
+            document.getElementById('invert').addEventListener('click', function (e) {
+                const viewport = cornerstone.getViewport(element);
+                viewport.invert = !viewport.invert;
+                cornerstone.setViewport(element, viewport);
+            });
+
+            document.getElementById('interpolation').addEventListener('click', function (e) {
+                const viewport = cornerstone.getViewport(element);
+                viewport.pixelReplication = !viewport.pixelReplication;
+                cornerstone.setViewport(element, viewport);
+            });
+            document.getElementById('hflip').addEventListener('click', function (e) {
+                const viewport = cornerstone.getViewport(element);
+                viewport.hflip = !viewport.hflip;
+                cornerstone.setViewport(element, viewport);
+            });
+            document.getElementById('vflip').addEventListener('click', function (e) {
+                const viewport = cornerstone.getViewport(element);
+                viewport.vflip = !viewport.vflip;
+                cornerstone.setViewport(element, viewport);
+            });
+            document.getElementById('rotate').addEventListener('click', function (e) {
+                const viewport = cornerstone.getViewport(element);
+                viewport.rotation += 90;
+                cornerstone.setViewport(element, viewport);
+            });
+
+            element.addEventListener('mousemove', function (event) {
+                const pixelCoords = cornerstone.pageToPixel(element, event.pageX, event.pageY);
+                document.getElementById('coords').textContent = "pageX=" + event.pageX + ", pageY=" + event.pageY + ", pixelX=" + pixelCoords.x + ", pixelY=" + pixelCoords.y;
+            });
+        });
+        function clicks() {
+            console.log(this.getSelection(), 'this')
+            var start = editor.selection.getStart()
+            console.log(start, 'start')
+            var cav = document.getElementById('dicomcav')
+            if (cav.getContext) {
+                console.log(cav.getContext, 'cav.getContext')
+                var imgURI = cav.toDataURL("image/png");
+                console.log(imgURI, 'imgURI')
+                var image = document.createElement("img");
+                image.src = imgURI;
+                document.body.appendChild(image);
+            }
+        }
+        dialog.onok = function () {
+            var cav = document.getElementById('dicomcav')
+            if (cav.getContext) {
+                console.log(cav.getContext, 'cav.getContext')
+                var imgURI = cav.toDataURL("image/png");
+                console.log(imgURI, 'imgURI')
+                var image = document.createElement("img");
+                image.src = imgURI;
+                document.body.appendChild(image);
+            }
+            var start = editor.selection.getStart()
+            start.src = imgURI
+            editor.execCommand('dicom', imgURI);
+
+        }
+    </script>
+
+</body>
+
+</html>

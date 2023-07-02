@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <script type="text/javascript" src="../internal.js"></script>
+    <link rel="stylesheet" type="text/css" href="dicom.css" />
+</head>
+
+<body>
+    <div id="wrap" style="height: 99%;">
+        <div id="main" class="main" style="height: 580px;">
+            <!-- 研究查看器标签内容模板 -->
+            <div id="studyViewerTemplate" class="tab-pane active" style="height:100%">
+                <div class="studyContainer" style="height:100%;overflow:hidden;">
+                    <div class="studyRow row" style="height:100%">
+
+                        <!-- Thumbnails -->
+                        <div class="thumbnailSelector">
+                            <div class="thumbnails list-group" style="height: 100%;">
+                                <a class="list-group-item ui-draggable ui-draggable-handle" +=""
+                                    oncontextmenu="return false" unselectable="on" onselectstart="return false;"
+                                    onmousedown="return false;">
+                                    <div class="csthumbnail" oncontextmenu="return false" unselectable="on"
+                                        onselectstart="return false;" onmousedown="return false;"><canvas width="100"
+                                            height="100" style="width: 100px; height: 100px;"></canvas></div>
+                                    <div class="text-center small">Pelvis PA</div>
+                                </a><a class="list-group-item ui-draggable ui-draggable-handle active" +=""
+                                    oncontextmenu="return false" unselectable="on" onselectstart="return false;"
+                                    onmousedown="return false;">
+                                    <div class="csthumbnail" oncontextmenu="return false" unselectable="on"
+                                        onselectstart="return false;" onmousedown="return false;"><canvas width="100"
+                                            height="100" style="width: 100px; height: 100px;"></canvas></div>
+                                    <div class="text-center small">PELVIS LAT</div>
+                                </a></div>
+                        </div>
+
+                        <!-- Viewer -->
+                        <div class="viewer" style="width: 714px; height: 100%;">
+                            <!-- Toolbar -->
+                            <div class="text-center">
+                                <div class="btn-group">
+                                    <!-- WW/WL -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="WW/WC"><span class="fa fa-sun-o"></span></button>
+                                    <!-- Invert -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Invert"><span class="fa fa-adjust"></span></button>
+                                    <!-- Zoom -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Zoom"><span class="fa fa-search"></span></button>
+                                    <!-- Pan -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Pan"><span class="fa fa-arrows"></span></button>
+                                    <!-- Stack scroll -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Stack Scroll"><span class="fa fa-bars"></span></button>
+                                    <!-- Length measurement -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Length Measurement"><span
+                                            class="fa fa-arrows-v"></span></button>
+                                    <!-- Angle measurement -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Angle Measurement"><span
+                                            class="fa fa-angle-left"></span></button>
+                                    <!-- Pixel probe -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Pixel Probe"><span
+                                            class="fa fa-dot-circle-o"></span></button>
+                                    <!-- Elliptical ROI -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Elliptical ROI"><span
+                                            class="fa fa-circle-o"></span></button>
+                                    <!-- Rectangle ROI -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Rectangle ROI"><span
+                                            class="fa fa-square-o"></span></button>
+                                    <!-- Play clip -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Play Clip"><span class="fa fa-play"></span></button>
+                                    <!-- Stop clip -->
+                                    <button type="button" class="btn btn-sm btn-default" data-container="body"
+                                        data-toggle="tooltip" data-placement="bottom" title=""
+                                        data-original-title="Stop Clip"><span class="fa fa-stop"></span></button>
+                                    <button type="button" class="btn btn-sm btn-default dropdown-toggle"
+                                        data-container="body" data-toggle="dropdown" aria-expanded="false"
+                                        data-placement="top" title="" data-original-title="Layout"><span
+                                            class="fa fa-th-large"></span></button>
+                                    <ul class="pull-right dropdown-menu choose-layout" role="menu">
+                                        <li><a href="#">1x1</a></li>
+                                        <li><a href="#">2x1</a></li>
+                                        <li><a href="#">1x2</a></li>
+                                        <li><a href="#">2x2</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Viewer -->
+                            <div class="imageViewer" style="height: 550px;">
+                                <div class="viewportWrapper"
+                                    style="width:100%;height:100%;position:relative;color: white;float:left;background-color:black;"
+                                    oncontextmenu="return false" unselectable="on" onselectstart="return false;"
+                                    onmousedown="return false;">
+                                    <!-- Viewport -->
+                                    <div class="viewport ui-droppable"
+                                        style="touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+                                        <canvas width="710" height="546" style="width: 710px; height: 546px;"></canvas>
+                                    </div>
+
+                                    <!-- Overlays -->
+                                    <div class="overlay" style="top:0px; left:0px">
+                                        <div>MISTER^CR</div>
+                                        <div>9227465</div>
+                                    </div>
+
+                                    <div class="overlay" style="top:0px; right:0px">
+                                        <div>pelvis</div>
+                                        <div>20010109</div>
+                                    </div>
+
+                                    <div class="overlay" style="bottom:0px; left:0px">
+                                        <div class="fps"></div>
+                                        <div class="renderTime">Render Time:0 ms</div>
+                                        <div class="currentImageAndTotalImages">Image # 1/1</div>
+                                    </div>
+
+                                    <div class="overlay" style="bottom:0px; right:0px">
+                                        <div>Zoom:1.07</div>
+                                        <div>WW/WL:1500/-700</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="J_maskLayer" class="maskLayerNull"></div>
+
+    <script type="text/javascript" src="konva.min.js"></script>
+    <script type="text/javascript" src="draw.js"></script>
+    <script type="text/javascript">
+        let draw = [], // 绘制的图形数组
+            graphNow = null, // 当前图形
+            flag = 'rect', // 激活绘制-铅笔 pencil:铅笔 ellipse:椭圆 rect:矩形 rectH:矩形-空心
+            drawing = false, // 绘制中
+            graphColor = 'red',
+            pointStart = [] // 初始坐标
+
+        // 选择颜色
+        function selectColorFn(t) {
+            graphColor = t.value
+        }
+
+        // 移除图形
+        function removeFn() {
+            if (graphNow) {
+                graphNow.remove()
+                stage.find('Transformer').destroy()
+                layer.draw()
+                graphNow = null
+            } else {
+                alert('请选择图形')
+            }
+        }
+
+        // 1 create stage
+        const stage = new Konva.Stage({
+            container: 'J_brushBoard',
+            width: 300,
+            height: 360,
+        })
+
+        // 2 create layer
+        const layer = new Konva.Layer()
+        stage.add(layer)
+
+        // 3 create our shape
+        // 画椭圆
+        // drawEllipse();
+        // drawPencil([5, 70, 140, 23], 'red', 4)
+        // drawRect(20, 20, 122, 50, 'red', 4);
+
+        // 移除改变大小事件
+        stage.on('mousedown', function (e) {
+            // 如果点击空白处 移除图形选择框
+            // console.log(e);
+            // flag = scrawlObj.flagDraw
+            if (e.target === stage) {
+                stageMousedown(flag, e)
+
+                // 移除图形选择框
+                stage.find('Transformer').destroy()
+                layer.draw()
+                return
+            }
+            // 如果没有匹配到就终止往下执行
+            if (
+                !e.target.hasName('line') &&
+                !e.target.hasName('ellipse') &&
+                !e.target.hasName('rect') &&
+                !e.target.hasName('circle')
+            ) {
+                return
+            }
+            // 移除图形选择框
+            stage.find('Transformer').destroy()
+
+            // 当前点击的对象赋值给graphNow
+            graphNow = e.target
+            // 创建图形选框事件
+            const tr = new Konva.Transformer({
+                borderStroke: '#000', // 虚线颜色
+                borderStrokeWidth: 1, //虚线大小
+                borderDash: [5], // 虚线间距
+                keepRatio: false, // 不等比缩放
+            })
+            layer.add(tr)
+            tr.attachTo(e.target)
+            layer.draw()
+        })
+
+        // 鼠标移动
+        stage.on('mousemove', function (e) {
+            if (graphNow && flag && drawing) {
+                stageMousemove(flag, e)
+            }
+        })
+
+        // 鼠标放开
+        stage.on('mouseup', function () {
+            drawing = false
+            if (flag === 'text') flag = null
+        })
+    </script>
+    <script type="text/javascript" src="tagimg.js"></script>
+    <script type="text/javascript">
+        var settings = {
+            drawBrushSize: 3, //画笔初始大小
+            drawBrushColor: '#4bacc6', //画笔初始颜色
+            colorList: [
+                'c00000',
+                'ff0000',
+                'ffc000',
+                'ffff00',
+                '92d050',
+                '00b050',
+                '00b0f0',
+                '0070c0',
+                '002060',
+                '7030a0',
+                'ffffff',
+                '000000',
+                'eeece1',
+                '1f497d',
+                '4f81bd',
+                'c0504d',
+                '9bbb59',
+                '8064a2',
+                '4bacc6',
+                'f79646',
+            ], //画笔选择颜色
+            saveNum: 10, //撤销次数
+        }
+
+        var scrawlObj = new tagimg(settings)
+        scrawlObj.isCancelScrawl = false
+
+        dialog.onok = function () {
+            exec(scrawlObj)
+            return false
+        }
+        dialog.oncancel = function () {
+            scrawlObj.isCancelScrawl = true
+        }
+    </script>
+</body>
+
+</html>

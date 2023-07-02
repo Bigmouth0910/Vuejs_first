@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      #preview {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      #preview * {
+        font-family: sans-serif;
+        font-size: 16px;
+      }
+    </style>
+    <script type="text/javascript" src="../internal.js"></script>
+    <script src="../../core.parse.js"></script>
+    <title></title>
+  </head>
+
+  <body class="view" id="views">
+    <div id="preview" style="margin: 8px"></div>
+  </body>
+  <script>
+    console.log(editor.body, "editor.getContent()");
+    // const left = editor.body.getElementsByClassName("oak-left");
+    document.getElementById("preview").innerHTML = editor.getContent();
+    const left = document
+      .getElementById("preview")
+      .getElementsByClassName("oak-left");
+    for (let i = 0; i < left.length; i++) {
+      left[i].style.display = "none";
+    }
+    const right = document
+      .getElementById("preview")
+      .getElementsByClassName("oak-right");
+    for (let i = 0; i < right.length; i++) {
+      right[i].style.display = "none";
+    }
+    const sdeLeft = document
+      .getElementById("preview")
+      .getElementsByClassName("sde-left");
+    for (let i = 0; i < sdeLeft.length; i++) {
+      sdeLeft[i].style.display = "none";
+    }
+    const sdeRight = document
+      .getElementById("preview")
+      .getElementsByClassName("sde-right");
+    for (let i = 0; i < sdeRight.length; i++) {
+      sdeRight[i].style.display = "none";
+    }
+    const oakField = document
+      .getElementById("preview")
+      .getElementsByClassName("oak-field");
+    for (let i = 0; i < oakField.length; i++) {
+      oakField[i].style.border = 0;
+      oakField[i].style.width = "160px";
+      oakField[i].style.color = "#000";
+    }
+    uParse("#preview", {
+      rootPath: "../../",
+      chartContainerHeight: 500,
+    });
+    dialog.oncancel = function () {
+      document.getElementById("preview").innerHTML = "";
+    };
+  </script>
+</html>

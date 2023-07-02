@@ -1,0 +1,1 @@
+INSERT INTO `chred_codemst` VALUES (18, NULL, NULL, '醫生名單', '醫生名單', NULL, NULL, NULL, NULL, '0', 'http://localhost:8080/api/external/getDoctorNames', NULL, NULL, NULL, NULL, '2023-02-18 09:23:59', NULL, '2023-02-18 09:23:59', NULL, NULL, NULL, NULL, NULL);

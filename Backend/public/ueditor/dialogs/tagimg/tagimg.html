@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="robots" content="noindex, nofollow" />
+  <script type="text/javascript" src="../internal.js"></script>
+  <link rel="stylesheet" type="text/css" href="tagimg.css" />
+</head>
+
+<body>
+  <div class="main" id="J_wrap">
+    <div class="hot" style="width: 500px;">
+      <div class="drawBoard border_style1">
+        <div id="J_brushBoard" class="brushBorad" width="360" height="300"></div>
+        <div id="J_picBoard" class="picBoard" style="width: 360px; height: 300px;"></div>
+      </div>
+      <div id="J_operateBar" class="operateBar">
+        <span id="J_previousStep" class="previousStep">
+          <em class="icon"></em>
+          <em class="text"><var id="lang_input_previousStep"></var></em>
+        </span>
+        <span id="J_nextStep" class="nextStep">
+          <em class="icon"></em>
+          <em class="text"><var id="lang_input_nextsStep"></var></em>
+        </span>
+        <span id="J_clearBoard" class="clearBoard">
+          <em class="icon"></em>
+          <em class="text"><var id="lang_input_clear"></var></em>
+        </span>
+        <span id="J_sacleBoard" class="scaleBoard">
+          <em class="icon"></em>
+          <em class="text"><var id="lang_input_ScalePic"></var></em>
+        </span>
+      </div>
+    </div>
+    <div class="drawToolbar border_style1">
+      <div id="J_colorBar" class="colorBar"></div>
+      <div id="J_brushBar" class="sectionBar">
+        <em class="brushIcon"></em>
+        <a href="javascript:void(0)" class="size1">1</a>
+        <a href="javascript:void(0)" class="size2">3</a>
+        <a href="javascript:void(0)" class="size3">5</a>
+        <a href="javascript:void(0)" class="size4">7</a>
+      </div>
+      <div id="J_eraserBar" class="sectionBar">
+        <em class="eraserIcon"></em>
+        <a href="javascript:void(0)" class="size1">1</a>
+        <a href="javascript:void(0)" class="size2">3</a>
+        <a href="javascript:void(0)" class="size3">5</a>
+        <a href="javascript:void(0)" class="size4">7</a>
+      </div>
+      <div class="sectionBar">
+        <div id="J_addRect" class="addImgH rectangle">
+          <em class="icon"></em>
+          <!-- <em class="text"><var id="lang_input_addRect"></var></em> -->
+        </div>
+      </div>
+      <div class="sectionBar">
+        <span id="J_addHollowRect" class="addImgH hollowrectangle">
+          <em class="icon"></em>
+          <!-- <em class="text"><var id="lang_input_hollowRect"></var></em> -->
+        </span>
+      </div>
+      <div class="sectionBar">
+        <span id="J_addOval" class="addImgH ellipse">
+          <em class="icon"></em>
+          <!-- <em class="text"><var id="lang_input_addOval"></var></em> -->
+        </span>
+      </div>
+      <div class="sectionBar">
+        <span id="J_addTxt" class="addImgH words">
+          <em class="icon"></em>
+          <!-- <em class="text"><var id="lang_input_addTxt"></var></em> -->
+        </span>
+      </div>
+      <div class="sectionBar">
+        <span id="J_addArrow" class="addImgH arrow">
+          <em class="icon"></em>
+          <!-- <em class="text"><var id="lang_input_addArrow"></var></em> -->
+        </span>
+      </div>
+    </div>
+  </div>
+  <div id="J_maskLayer" class="maskLayerNull"></div>
+
+  <script type="text/javascript" src="konva.min.js"></script>
+  <script type="text/javascript" src="draw.js"></script>
+  <script type="text/javascript">
+    let draw = [], // 绘制的图形数组
+      graphNow = null, // 当前图形
+      flag = 'rect', // 激活绘制-铅笔 pencil:铅笔 ellipse:椭圆 rect:矩形 rectH:矩形-空心
+      drawing = false, // 绘制中
+      graphColor = 'red',
+      pointStart = [] // 初始坐标
+
+    // 选择颜色
+    function selectColorFn(t) {
+      graphColor = t.value
+    }
+
+    // 移除图形
+    function removeFn() {
+      if (graphNow) {
+        graphNow.remove()
+        stage.find('Transformer').destroy()
+        layer.draw()
+        graphNow = null
+      } else {
+        alert('请选择图形')
+      }
+    }
+
+    // 1 create stage
+    const stage = new Konva.Stage({
+      container: 'J_brushBoard',
+      width: 300,
+      height: 360,
+    })
+
+    // 2 create layer
+    const layer = new Konva.Layer()
+    stage.add(layer)
+    // const arrow = new Konva.Arrow()
+    // layer.add(arrow);
+    // 3 create our shape
+    // 画椭圆
+    // drawEllipse();
+    // drawPencil([5, 70, 140, 23], 'red', 4)
+    // drawRect(20, 20, 122, 50, 'red', 4);
+
+    // 移除改变大小事件
+    stage.on('mousedown', function (e) {
+      // 如果点击空白处 移除图形选择框
+      // console.log(e);
+      // flag = scrawlObj.flagDraw
+      if (e.target === stage) {
+        stageMousedown(flag, e)
+
+        // 移除图形选择框
+        stage.find('Transformer').destroy()
+        layer.draw()
+        return
+      }
+      // 如果没有匹配到就终止往下执行
+      if (
+        !e.target.hasName('line') &&
+        !e.target.hasName('ellipse') &&
+        !e.target.hasName('rect') &&
+        !e.target.hasName('circle') &&
+        !e.target.hasName('arrow')
+      ) {
+        return
+      }
+      // 移除图形选择框
+      stage.find('Transformer').destroy()
+
+      // 当前点击的对象赋值给graphNow
+      graphNow = e.target
+      // 创建图形选框事件
+      const tr = new Konva.Transformer({
+        borderStroke: '#000', // 虚线颜色
+        borderStrokeWidth: 1, //虚线大小
+        borderDash: [5], // 虚线间距
+        keepRatio: false, // 不等比缩放
+      })
+      layer.add(tr)
+      tr.attachTo(e.target)
+      layer.draw()
+
+    })
+
+
+
+    // 鼠标移动
+    stage.on('mousemove', function (e) {
+      if (graphNow && flag && drawing) {
+        stageMousemove(flag, e)
+      }
+    })
+
+    // 鼠标放开
+    stage.on('mouseup', function () {
+      drawing = false
+      if (flag === 'text') flag = null
+    })
+  </script>
+  <script type="text/javascript" src="tagimg.js"></script>
+  <script type="text/javascript">
+    var settings = {
+      drawBrushSize: 3, //画笔初始大小
+      drawBrushColor: '#4bacc6', //画笔初始颜色
+      colorList: [
+        'c00000',
+        'ff0000',
+        'ffc000',
+        'ffff00',
+        '92d050',
+        '00b050',
+        '00b0f0',
+        '0070c0',
+        '002060',
+        '7030a0',
+        'ffffff',
+        '000000',
+        'eeece1',
+        '1f497d',
+        '4f81bd',
+        'c0504d',
+        '9bbb59',
+        '8064a2',
+        '4bacc6',
+        'f79646',
+      ], //画笔选择颜色
+      saveNum: 10, //撤销次数
+    }
+
+    var scrawlObj = new tagimg(settings)
+    scrawlObj.isCancelScrawl = false
+
+    dialog.onok = function () {
+      exec(scrawlObj)
+      return false
+    }
+    dialog.oncancel = function () {
+      scrawlObj.isCancelScrawl = true
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <script type="text/javascript" src="../internal.js"></script>
+    <style type="text/css">
+      .section {
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .section input {
+        margin-left: 5px;
+        width: 100px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="section">
+      选择插入的医学表达式：
+      <select id="MedicalExpressionMenu" onchange="getType()">
+        <option value="all">选择插入的医学表达式</option>
+        <option value="currency">牙位公式</option>
+        <option value="menstruation1">房角公式</option>
+        <option value="menstruation0">月经史公式</option>
+        <option value="menstruation2">月经史公式2</option>
+        <option value="menstruation3">月经史公式3</option>
+        <option value="pupil">瞳孔图公式</option>
+        <option value="light">光定位公式</option>
+      </select>
+    </div>
+    <hr />
+    <span id="mtitle"></span>
+    <hr />
+    <table>
+      <tr>
+        <td style="padding: 10px">
+          <div id="contents"></div>
+        </td>
+        <td style="border-left: 1px solid #000">
+          <div id="viewimg" style="width: 140px"></div>
+        </td>
+      </tr>
+    </table>
+    <hr />
+    <script type="text/javascript" src="../../third-party/jquery.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+    <script type="text/javascript">
+      var oNode = null,
+        thePlugins = "formulas";
+      var baseUrl = "/public/core/dialogs/formulas";
+      var viewimg = document.getElementById("viewimg");
+      var mtitle = document.getElementById("mtitle");
+      var contents = document.getElementById("contents");
+      var inputs = contents.getElementsByTagName("input");
+      var medicalExpression = $G("MedicalExpressionMenu");
+      var imglocal = JSON.parse(localStorage.getItem("clickimg")) || {};
+      var types = [
+        {
+          expressionstyle: "currency",
+          Value1: 14,
+          Value2: 14,
+          Value3: 14,
+          Value4: 14,
+          text: "请输入牙位公式值：",
+          style: "",
+          stylex: "",
+          url: "",
+          html:
+            '<table style="width:100%;" cellspacing="0"><tbody><tr style="text-align: center"><td style="border-color: #000000;border-right-style: solid;border-width:3px;width:150px;">A值:</td><td style="border-color: #000000;border-left-style: solid;border-width:3px;">B值:</td></tr><tr style="text-align: center"><td style="border-color: #000000;border-right-style: solid; border-bottom-style: solid;padding-bottom: 5px;border-width:3px;"><input style="width:130px" type="text" id="Value1"></td><td style="border-color: #000000;border-left-style: solid; border-bottom-style: solid;padding-bottom: 5px;border-width:3px;"><input style="width:130px" type="text" id="Value2"></td></tr><tr style="text-align: center"><td style="border-color: #000000;border-right-style: solid; border-top-style: solid;border-width:3px;">C值:</td><td style="border-color: #000000;border-left-style: solid; border-top-style: solid;border-width:3px;width:150px;">D值:</td></tr> <tr style="text-align: center"> <td style="border-color: #000000;border-right-style: solid;border-width:3px;width:150px;"><input style="width:130px" type="text" id="Value3"></td><td style="border-color: #000000;border-left-style: solid;border-width:3px;"><input style="width:130px" type="text" id="Value4"></td></tr></tbody></table>',
+          htmlx:
+            '<table style="width:100%;" cellspacing="0"><tbody><tr style="text-align: center"><td style="border-color: #000000; border-bottom-style: solid;border-width:1px;width:20px;"><span id="Value1">14</span></td><td style="border-color: #000000;border-left-style: solid; border-bottom-style: solid;border-width:1px;width:20px"><span type="text" id="Value2">14</span></td></tr><tr style="text-align: center"> <td style="border-color: #000000; border-width:1px;"><span type="text" id="Value3">14</span></td><td style="border-color: #000000;border-left-style: solid;border-width:1px;"><span type="text" id="Value4">14</span></td></tr></tbody></table>',
+        },
+        {
+          expressionstyle: "menstruation0",
+          Value1: 12,
+          Value2: "5-6",
+          Value3: "28-30",
+          Value4: "2022-06-09",
+          text: "请输入月经史公式值：",
+          url: "",
+          style: "",
+          stylex: "width:140px",
+          html:
+            '<table style="width: 100%" cellspacing="0"><tbody><tr style="text-align: center; vertical-align: middle"><td rowspan="2">A值<input type="text"  id="Value1" style="width: 100px" /></td><td style="border-color: #000000;border-bottom-style: solid;padding-bottom: 5px;border-width: 3px;">B值<br /><input type="text" id="Value2" style="width: 100px" /></td><td rowspan="2">D值<input type="text" id="Value4" style="width: 100px" /></td></tr><tr style="text-align: center; vertical-align: middle"><td style="border-color: #000000;border-top-style: solid;border-width: 3px;">C值<br /><input type="text" id="Value3" style="width: 100px" /></td></tr></tbody></table>',
+          htmlx:
+            '<table style="width:100%;" cellspacing="0"><tbody><tr style="text-align: center; vertical-align:middle;"><td rowspan="2" style="width:20px"><span id="Value1" style="width:20px">12</span></td><td style="border-color: #000000;border-bottom-style: solid;border-width:1px;width:20px"><span id="Value2" style="width:20px">5-6</span></td><td rowspan="2" style="width:20px"><span id="Value4" style="width:20px">2022-6-9</span></td></tr><tr style="text-align: center; vertical-align:middle;"><td style="border-color: #000000;border-top-style: solid;border-width:0px;width:20px"><span id="Value3" style="width:20px">28-30</span></td></tr></tbody></table>',
+        },
+        {
+          expressionstyle: "menstruation1",
+          Value1: 14,
+          Value2: 14,
+          Value3: 14,
+          Value4: 14,
+          text: "请输入房角公式值：",
+          url: "",
+          style:
+            'background: url("./imgs/ServicePage.png") no-repeat;background-size: 327px 175px; background-position: 6% 82%; background-attachment: fixed; background-repeat: no - repeat;',
+          stylex:
+            "background: url(./imgs/ServicePage.png) no-repeat; background-size: 50px 107px;background-position: 45% 35%;background-repeat: no-repeat;",
+          html:
+            '<table style="width:100%;"><tbody><tr><td></td><td align="center" style="padding-bottom: 5px"><input id="Value2" type="text" style="width:100px;" autocomplete="off"></td><td></td></tr><tr><td align="center" style="padding-bottom: 5px"><input id="Value1" type="text" style="width:100px;" autocomplete="off"></td><td></td><td align="center" style="padding-bottom: 5px"><input id="Value3" type="text" style="width:100px;" autocomplete="off"></td></tr><tr><td></td><td align="center" style="padding-bottom: 5px"><input id="Value4" type="text" style="width:100px;" autocomplete="off"></td><td></td></tr></tbody></table>',
+          htmlx:
+            '<table style="width:100%;"><tbody><tr><td></td><td align="center" style="width:20px;"><span id="Value2">14</span></td><td></td></tr><tr><td align="center" style="width:20px;"><span id="Value1">14</span></td><td></td><td align="center" style="width:20px;"><span id="Value3">14</span></td></tr><tr><td></td><td align="center" style="width:20px"><span id="Value4">14</span></td><td></td></tr></tbody></table>',
+        },
+        {
+          expressionstyle: "menstruation2",
+          Value1: 14,
+          Value2: 14,
+          Value3: 14,
+          text: "请输入月经史2公式值：",
+          style: "",
+          stylex: "",
+          url: "",
+          html:
+            '<table style="width:100%;" cellspacing="0"><tbody><tr style="text-align: center; vertical-align:middle;"><td rowspan="2">A值<input type="text" id="Value1" style="width:150px"></td><td rowspan="2" style="padding-right: 5px"><strong>/</strong></td><td style="border-color: #000000;border-bottom-style: solid;padding-bottom: 5px;border-width:3px;">B值<br><input type="text" id="Value2" style="width:150px"></td></tr><tr style="text-align: center; vertical-align:middle;"><td style="border-color: #000000;border-top-style: solid;border-width:3px;">C值<br><input type="text" id="Value3" style="width:150px"></td></tr></tbody></table>',
+          htmlx:
+            '<table style="width:100%;" cellspacing="0"><tbody><tr style="text-align: center; vertical-align:middle;"><td rowspan="2" style="width:20px"><span id="Value1" style="width:20px">14</span></td><td rowspan="2" style="padding-right: 5px"><strong>/</strong></td><td style="border-color: #000000;border-bottom-style: solid;border-width:1px;width:20px"><span id="Value2" style="width:20px">14</span></td></tr><tr style="text-align: center; vertical-align:middle;"><td style="border-color: #000000;border-top-style: solid;border-width:0px;width:20px"><span id="Value3" style="width:20px">14</span></td></tr></tbody></table>',
+        },
+        {
+          expressionstyle: "menstruation3",
+          Value1: 14,
+          Value2: 14,
+          Value3: 14,
+          Value4: 14,
+          text: "请输入月经史3公式值：",
+          style: "",
+          stylex: "",
+          url: "",
+          html:
+            '<table style="width:100%;" cellspacing="0"><tbody><tr style="text-align: center"><td rowspan="2" style="padding-bottom: 10px;">初潮年龄<br><input type="text" id="Value1" style="width:100px;"></td><td style="border-color: #000000; border-bottom-style: solid; padding-bottom: 5px; border-width:3px;">经期(天)<br><input type="text" id="Value2" style="width:100px;"></td><td rowspan="2" style="padding-bottom: 25px;">末次月经/<br>绝经年龄 <br><input type="text" id="Value4" style="width:100px;"></td></tr><tr style="text-align: center"><td style="border-color: #000000; border-top-style: solid; border-width:3px;">周期(天)<br><input type="text" id="Value3" style="width:100px;"></td></tr></tbody></table>',
+          htmlx:
+            '<table style="width:100%;" cellspacing="0"><tbody><tr style="text-align: center"><td rowspan="2" style="width:20px"><span id="Value1" >14</span></td><td style="border-color: #000000; border-bottom-style: solid; border-width:1px;"><span  id="Value2">14</span></td><td rowspan="2" style="width:20px"><span id="Value4" >14</span></td></tr><tr style="text-align: center"><td style="border-color: #000000; border-top-style: solid; border-width:0px;width:20px"><span  id="Value3" >14</span></td></tr></tbody></table>',
+        },
+        {
+          expressionstyle: "pupil",
+          Value1: 14,
+          Value2: 14,
+          Value3: 14,
+          Value4: 14,
+          Value5: 14,
+          Value6: 14,
+          Value7: 14,
+          text: "请输入瞳孔图值：",
+          style: "",
+          stylex: "",
+          url: "",
+          html:
+            '<table style="width:100%;" cellspacing="5"><tbody><tr style="text-align: center"><td><input type="text" id="Value1" style="width:100px;"></td><td></td><td><input type="text" id="Value2" style="width:100px;"></td></tr><tr style="text-align: center"><td><input type="text" id="Value3" style="width:100px;"></td><td><input type="text" id="Value4" style="width:100px;"></td><td><input type="text" id="Value5" style="width:100px;"></td></tr><tr style="text-align: center"><td><input type="text" id="Value6" style="width:100px;"></td><td></td><td><input type="text" id="Value7" style="width:100px;"></td></tr></tbody></table>',
+          htmlx:
+            '<table style="width:100%;" cellspacing="5"><tbody><tr style="text-align: center"><td style="width:20px;"><span id="Value1" >14</span></td><td></td><td style="width:20px;"><span id="Value2" >14</span></td></tr><tr style="text-align: center"><td style="width:20px;"><span id="Value3">14</span></td><td style="width:20px;"><span id="Value4" >14</span></td><td style="width:20px;"><span id="Value5" >14</span></td></tr><tr style="text-align: center"><td style="width:20px;"><span id="Value6">14</span></td><td></td><td style="width:20px;"><span id="Value7">14</span></td></tr></tbody></table>',
+        },
+        {
+          expressionstyle: "light",
+          Value1: 14,
+          Value2: 14,
+          Value3: 14,
+          Value4: 14,
+          Value5: 14,
+          Value6: 14,
+          Value7: 14,
+          Value8: 14,
+          Value9: 14,
+          text: "请输入光定位值：",
+          style: "",
+          stylex: "",
+          url: "",
+          html:
+            '<table style="width:100%;" cellspacing="5"><tbody><tr style="text-align: center"><td><input type="text" id="Value1" style="width:100px"></td><td><input type="text" id="Value2" style="width:100px"></td><td><input type="text" id="Value3" style="width:100px"></td></tr><tr style="text-align: center"><td><input type="text" id="Value4" style="width:100px"></td><td><input type="text" id="Value5" style="width:100px" td=""></td><td><input type="text" id="Value6" style="width:100px"></td></tr><tr style="text-align: center"><td><input type="text" id="Value7" style="width:100px"></td><td><input type="text" id="Value8" style="width:100px"></td><td><input type="text" id="Value9" style="width:100px"></td></tr></tbody></table>',
+          htmlx:
+            '<table style="width:100%;" cellspacing="5"><tbody><tr style="text-align: center"><td style="width:20px"><span id="Value1">14</span></td><td  style="width:20px"><span id="Value2">14</span></td><td  style="width:20px"><span id="Value3">14</span></td></tr><tr style="text-align: center"><td  style="width:20px"><span id="Value4" style="width:100px">14</span></td><td style="width:20px"><span id="Value5" >14</span></td><td  style="width:20px"><span id="Value6">14</span></td></tr><tr style="text-align: center"><td style="width:20px"><span id="Value7">14</span></td><td style="width:20px"><span id="Value8" >14</span></td><td style="width:20px"><span id="Value9" >14</span></td></tr></tbody></table>',
+        },
+      ];
+      var imgURL = "";
+      var selectType = {};
+      var index = 0;
+      if (imglocal.expressionstyle) {
+        medicalExpression.value = imglocal.expressionstyle;
+        mtitle.innerText = imglocal.text;
+        contents.innerHTML = imglocal.html;
+        contents.style = imglocal.style;
+        viewimg.innerHTML = imglocal.htmlx;
+        viewimg.style = imglocal.stylex;
+        imgURL = imglocal.url;
+        selectType = imglocal;
+        for (var i = 0; i < inputs.length; i++) {
+          for (var name in imglocal) {
+            //遍历对象属性名
+            if (inputs[i].id == name) {
+              inputs[i].value = imglocal[name];
+            }
+          }
+        }
+      }
+      checkAdult = function (x) {
+        return x.expressionstyle == medicalExpression.value;
+      };
+      $(document).on("input propertychange", function () {
+        aa();
+      });
+      function aa() {
+        var conchil = document.getElementsByTagName("input");
+        var viewchil = document.getElementsByTagName("span");
+        for (var v = 0; v < viewchil.length; v++) {
+          if (viewchil[v].id.startsWith("Value")) {
+            for (var c = 0; c < conchil.length; c++) {
+              if (viewchil[v].id == conchil[c].id) {
+                viewchil[v].innerText = conchil[c].value;
+              }
+              var htmlx = types[index]["htmlx"];
+              for (var name in types[index]) {
+                //遍历对象属性名
+                if (name == conchil[c].id) {
+                  types[index][name] = conchil[c].value;
+                }
+              }
+              for (var name in selectType) {
+                //遍历对象属性名
+                if (name == conchil[c].id) {
+                  selectType[name] = conchil[c].value;
+                }
+              }
+            }
+          }
+        }
+        selectType.htmlx = $("#viewimg").html();
+        selectType.html = $("#contents").html();
+        downloadBTN();
+      }
+      function downloadBTN() {
+        console.log("===============z");
+        var w = $("#viewimg").width();
+        var h = $("#viewimg").height();
+        var canvas = document.createElement("canvas");
+        canvas.width = w * 2;
+        canvas.height = h * 2;
+        canvas.style.width = w + "px";
+        canvas.style.height = h + "px";
+        var context = canvas.getContext("2d"); //然后将画布缩放，将图像放大两倍画到画布上
+        context.scale(2, 2);
+        html2canvas($("#viewimg"), {
+          onrendered: function (canvas) {
+            selectType.url = canvas.toDataURL();
+            imgURL = canvas.toDataURL();
+          },
+        });
+      }
+      getType = function () {
+        index = types.findIndex(this.checkAdult);
+        if (index != -1) {
+          mtitle.innerText = types[index].text;
+          contents.innerHTML = types[index].html;
+          viewimg.innerHTML = types[index].htmlx;
+          contents.style = types[index].style;
+          viewimg.style = types[index].stylex;
+          selectType = types[index];
+          if (selectType.expressionstyle === "menstruation0") {
+            inputs[0].value = 12;
+            inputs[1].value = "5-6";
+            inputs[2].value = "2022-06-09";
+            inputs[3].value = "28-30";
+          } else {
+            for (var i = 0; i < inputs.length; i++) {
+              inputs[i].value = 14;
+            }
+          }
+          downloadBTN();
+        } else {
+          mtitle.innerText = "";
+          contents.innerHTML = "";
+          selectType = {};
+        }
+      };
+      dialog.onok = function () {
+        console.log(medicalExpression.value, imgURL, selectType, "======-----");
+        // localStorage.setItem('clickimg', JSON.stringify({}))
+        editor.execCommand(
+          "formulas",
+          medicalExpression.value,
+          imgURL,
+          selectType
+        );
+      };
+      dialog.oncancel = function () {
+        localStorage.setItem("clickimg", JSON.stringify({}));
+        localStorage.setItem("clickimgid", JSON.stringify(""));
+        // editor.execCommand("formulas", imgURL, '');
+      };
+    </script>
+  </body>
+</html>

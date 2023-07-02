@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <script type="text/javascript" src="../internal.js"></script>
+    <style type="text/css">
+        .section {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .section input {
+            margin-left: 5px;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="section">
+        添加位置：
+        <select id='J_header'>
+            <option value="head">页眉</option>
+            <option value="foot">页脚</option>
+        </select>
+    </div>
+    <script type="text/javascript">
+        var header = $G("J_header")
+        dialog.onok = function () {
+            console.log(header.value, 'tone.value')
+            editor.execCommand("insertpage", header.value);
+        };
+
+    </script>
+</body>
+
+</html>

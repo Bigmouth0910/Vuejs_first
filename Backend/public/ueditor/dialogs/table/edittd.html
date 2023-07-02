@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <script type="text/javascript" src="../internal.js"></script>
+    <link rel="stylesheet" type="text/css" href="edittd.css">
+
+</head>
+
+<body>
+    <div class="section">
+        <h3>单元格属性</h3>
+        <ul>
+            <li>
+                <span><var id="lang_tdBkColor"></var></span>
+                <input type="text" id="J_tone" />
+            </li>
+            <li>
+                <label>
+                    <input type="checkbox" id="J_printtd" name="style" ischecked='false' />
+                    <var id="lang_printfalse"></var>
+                </label>
+            </li>
+        </ul>
+        <div class="clear"></div>
+    </div>
+    <div class="section">
+        <h3><var id="lang_borderMap"></var></h3>
+        <div class="selectcon" style="width: 280px; display: inline-block;">
+            <ul>
+                <li>
+                    <img src="./imgs/24gl-borderNone.png" id="B_none" selected='false' />
+                </li>
+                <li>
+                    <img src="./imgs/24gl-borderTop.png" id="B_top" selected='false' />
+                </li>
+                <li>
+                    <img src="./imgs/24gl-borderBottom.png" id="B_bottom" selected='false' />
+                </li>
+                <li>
+                    <img src="./imgs/24gl-borderLeft.png" id="B_left" selected='false' />
+                </li>
+                <li>
+                    <img src="./imgs/24gl-borderRight.png" id="B_right" selected='false' />
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <span>边框颜色</span>
+                    <input type="text" id="J_borderColor" />
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <span>边框加粗宽度</span>
+                    <select type="text" id="J_borderWidth">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>px
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <hr width="50px" style="height: 3px;" />
+                </li>
+            </ul>
+        </div>
+        <div class="textlook">
+            <div class='textcon' id='lookdemo'>
+                文本
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <script type="text/javascript">
+        var tone = $G("J_tone"),
+            borderColor = $G('J_borderColor'),
+            isprint = $G("J_printtd"),
+            none = $G('B_none'),
+            tops = $G('B_top'),
+            right = $G('B_right'),
+            bottom = $G('B_bottom'),
+            left = $G('B_left'),
+            lookdemo = $G('lookdemo'),
+            borderWidth = $G('J_borderWidth'),
+            colorPiker = new UE.ui.ColorPicker({
+                editor: editor
+            }),
+            colorPop = new UE.ui.Popup({
+                editor: editor,
+                content: colorPiker
+            }),
+            borderPiker = new UE.ui.ColorPicker({
+                editor: editor
+            }),
+            borderPop = new UE.ui.Popup({
+                editor: editor,
+                content: borderPiker
+            });
+        domUtils.on(isprint, "click", function () {
+            var printCheck = isprint.getAttribute('ischecked') === 'false' ? 'true' : 'false'
+            isprint.setAttribute('ischecked', printCheck)
+        });
+        domUtils.on(tone, "click", function () {
+            colorPop.showAnchor(tone);
+        });
+        domUtils.on(borderColor, "click", function () {
+            borderPop.showAnchor(tone);
+        });
+        domUtils.on(document, 'mousedown', function () {
+            colorPop.hide();
+        });
+        colorPiker.addListener("pickcolor", function () {
+            tone.value = arguments[1];
+            colorPop.hide();
+        });
+        colorPiker.addListener("picknocolor", function () {
+            tone.value = "";
+            colorPop.hide();
+        });
+        borderPiker.addListener("pickcolor", function () {
+            borderColor.value = arguments[1];
+            borderPop.hide();
+        });
+        borderPiker.addListener("picknocolor", function () {
+            borderColor.value = "";
+            borderPop.hide();
+        });
+        function setBorder(node) {
+            node.setAttribute('selected', 'true')
+            node.style.background = '#ffe69f'
+            node.style.border = '1px solid #dcac6c'
+        }
+        function offBorder(node) {
+            node.style.backgroundColor = 'transparent'
+            node.style.border = '0'
+            node.setAttribute('selected', 'false')
+        }
+        domUtils.on(none, 'click', function () {
+            var noneselect = none.getAttribute('selected')
+            if (noneselect === 'false') {
+                setBorder(none)
+                offBorder(tops)
+                offBorder(bottom)
+                offBorder(left)
+                offBorder(right)
+                lookdemo.style.border = '0'
+            } else {
+                offBorder(none)
+            }
+        })
+        domUtils.on(tops, 'click', function () {
+            console.log('====')
+            var topselect = tops.getAttribute('selected')
+            if (topselect === 'false') {
+                setBorder(tops)
+                offBorder(none)
+                lookdemo.style.borderTop = `${borderWidth.value}px solid ${borderColor.value}`
+            } else {
+                offBorder(tops)
+                lookdemo.style.borderTop = '0'
+            }
+        })
+        domUtils.on(right, 'click', function () {
+            var rightselect = right.getAttribute('selected')
+            if (rightselect === 'false') {
+                setBorder(right)
+                offBorder(none)
+                lookdemo.style.borderRight = `${borderWidth.value}px solid ${borderColor.value}`
+            } else {
+                offBorder(right)
+                lookdemo.style.borderRight = '0'
+            }
+        })
+        domUtils.on(bottom, 'click', function () {
+            var bottomselect = bottom.getAttribute('selected')
+            if (bottomselect === 'false') {
+                setBorder(bottom)
+                offBorder(none)
+                lookdemo.style.borderBottom = `${borderWidth.value}px solid ${borderColor.value}`
+            } else {
+                offBorder(bottom)
+                lookdemo.style.borderBottom = '0'
+            }
+        })
+        domUtils.on(left, 'click', function () {
+            var leftselect = left.getAttribute('selected')
+            if (leftselect === 'false') {
+                setBorder(left)
+                offBorder(none)
+                lookdemo.style.borderLeft = `${borderWidth.value}px solid ${borderColor.value}`
+            } else {
+                offBorder(left)
+                lookdemo.style.borderLeft = '0'
+            }
+        })
+        dialog.onok = function () {
+            console.log(lookdemo.style.borderBottom, 'bott')
+            var borderSets = {
+                none: none.getAttribute('selected'),
+                top: lookdemo.style.borderTop,
+                right: lookdemo.style.borderRight,
+                bottom: lookdemo.style.borderBottom,
+                left: lookdemo.style.borderLeft,
+            }
+            console.log(tone.value, isprint, 'tone.value')
+            editor.execCommand("edittd", tone.value, isprint.getAttribute('ischecked'), borderSets);
+        };
+
+        var start = editor.selection.getStart(),
+            cell = start && domUtils.findParentByTagName(start, ["td", "th"], true);
+
+        if (cell) {
+            var color = domUtils.getComputedStyle(cell, 'background-color');
+            if (/^#/.test(color)) {
+                tone.value = color
+            }
+        }
+    </script>
+</body>
+
+</html>
