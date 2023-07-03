@@ -72,7 +72,7 @@ export default {
       var orgID = data.CODE_TYPE
       var gTitle = data.CODE_BACKGROUND_DESC.replace(/\"/g, '&quot;')
       var gComment = data.CODE_DESC.replace(/\"/g, '&quot;')//data.CODE_BACKGROUND_DESC.replace(/\"/g, '&quot;')
-
+      var gTooltip = data.CODE_TIP_DESC
       var options = gTitle
       var defaultValue = gTitle
       var bindData = []
@@ -107,7 +107,7 @@ export default {
             }
             var objStr = JSON.stringify(obj).replace(/\"/g, "\'")
 
-            var html = '<span class="oak-field oakplugin" style="' + placeStyle + '" oakplugin="select" id="' + orgID + '" title="' + gComment + '" obj="' + objStr + '" contenteditable="false">'
+            var html = '<span class="oak-field oakplugin" style="' + placeStyle + '" oakplugin="select" id="' + orgID + '" title="' + gTooltip + '" obj="' + objStr + '" contenteditable="false">'
             html += '<span class="oak-field oak-left" style="' + placeStyle + '" contenteditable="false">[</span>'
             html += '<span class="oak-field oak-field-value" style="color: ' + obj.color + '">' + options + '</span>'
             html += '<span class="oak-field oak-right" style="' + placeStyle + '" contenteditable="false">]</span>'
